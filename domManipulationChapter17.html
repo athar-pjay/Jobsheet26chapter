@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latihan 17.1 - DOM Manipulation</title>
+  <style>
+    /* Styling sederhana agar tampilan rapi */
+    #product-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .product-card {
+      border: 1px solid #ddd;
+      padding: 16px;
+      border-radius: 8px;
+      width: 200px;
+    }
+    .product-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Kontainer tempat render produk sesuai instruksi soal -->
+  <div id="product-list"></div>
+
+  <!-- Menghubungkan file JavaScript -->
+  <script src="domManipulationChapter17.js"></script>
+</body>
+</html>
