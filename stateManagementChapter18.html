@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Latihan State Management</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    .box { border: 1px solid #ccc; padding: 10px; margin-top: 10px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+  <h2>Latihan State Management Sederhana</h2>
+
+  <!-- 1. KONTROL / INPUT DARI USER -->
+  <input type="text" id="input-cari" placeholder="Find..." oninput="ubahPencarian(this.value)">
+  
+  <select onchange="ubahKategori(this.value)">
+    <option value="all">Semua Kategori</option>
+    <option value="elektronik">Elektronik</option>
+    <option value="pakaian">Pakaian</option>
+  </select>
+
+  <!-- 2. WADAH UNTUK MENAMPILKAN HASIL (UI) -->
+  <div id="wadah-produk" class="box"></div>
+
+  <script>
+    
+
+    const state = {
+      products: [
+        { nama: "HP Android", kategori: "elektronik" },
+        { nama: "Laptop", kategori: "elektronik" },
+        { nama: "Kaos Polos", kategori: "pakaian" },
+        { nama: "Jaket Parka", kategori: "pakaian" }
+      ],
+      search: "",      // Menyimpan kata kunci pencarian
+      category: "all"  // Menyimpan kategori yang dipilih
+    };
+
+    
+    function render() {
+      const wadah = document.getElementById("wadah-produk");
+      
+      // 1. Ambil data asli produk
+      let hasilFilter = state.products;
+
+      // 2. Saring berdasarkan teks pencarian di state
+      if (state.search !== "") {
+        hasilFilter = hasilFilter.filter(item => 
+          item.nama.toLowerCase().includes(state.search.toLowerCase())
+        );
+      }
+
+      // 3. Saring berdasarkan kategori di state
+      if (state.category !== "all") {
+        hasilFilter = hasilFilter.filter(item => 
+          item.kategori === state.category
+        );
+      }
+
+      // 4. Jika data kosong setelah difilter
+      if (hasilFilter.length === 0) {
+        wadah.innerHTML = "<p>Data tidak ditemukan!</p>";
+        return;
+      }
+
+      // 5. Gambar ulang ke HTML
+      wadah.innerHTML = hasilFilter.map(item => `
+        <p>📦 <strong>${item.nama}</strong> (${item.kategori})</p>
+      `).join("");
+    }
+
+    
+    function ubahPencarian(teks) {
+      state.search = teks; // 1. Ubah catatan (state)
+      render();            // 2. Gambar ulang tampilan
+    }
+
+    function ubahKategori(kategoriPilihan) {
+      state.category = kategoriPilihan; // 1. Ubah catatan (state)
+      render();                        // 2. Gambar ulang tampilan
+    }
+
+    // Panggil render() pertama kali saat halaman baru dibuka
+    render();
+  </script>
+
+</body>
+</html>

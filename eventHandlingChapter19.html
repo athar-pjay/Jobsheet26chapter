@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Latihan 19.1 - Event Handling & State</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .controls { display: flex; gap: 10px; margin-bottom: 20px; }
+    input, select { padding: 8px; font-size: 14px; }
+    .product-card { border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+  <h2>Katalog Produk</h2>
+
+  <!-- ELEMEN INPUTsesuai instruksi -->
+  <div class="controls">
+    <!-- Input Search -->
+    <input type="text" id="search-input" placeholder="Cari nama barang...">
+
+    <!-- Dropdown Category -->
+    <select id="category-select">
+      <option value="all">Semua Kategori</option>
+      <option value="Pakaian">Pakaian</option>
+      <option value="Sepatu">Sepatu</option>
+    </select>
+
+    <!-- Dropdown Sort -->
+    <select id="sort-select">
+      <option value="asc">Harga: Termurah ke Termahal</option>
+      <option value="desc">Harga: Termahal ke Termurah</option>
+    </select>
+  </div>
+
+  <!-- Wadah Hasil Render -->
+  <div id="product-list"></div>
+
+  <script>
+    // 1. DATA PRODUK (Contoh Data)
+    const products = [
+      { name: "Kaos Polos", category: "Pakaian", price: 50000 },
+      { name: "Jaket Parka", category: "Pakaian", price: 250000 },
+      { name: "Sepatu Lari", category: "Sepatu", price: 400000 },
+      { name: "Sandal Jepit", category: "Sepatu", price: 15000 },
+      { name: "Kemeja Flanel", category: "Pakaian", price: 150000 }
+    ];
+
+    // 2. STATE (Kondisi Penyimpanan)
+    const state = {
+      search: "",
+      category: "all",
+      sort: "asc"
+    };
+
+    // 3. ELEMEN DOM
+    const searchInput = document.querySelector("#search-input");
+    const categorySelect = document.querySelector("#category-select");
+    const sortSelect = document.querySelector("#sort-select");
+    const productList = document.querySelector("#product-list");
+
+    // 4. FUNGSI RENDER (Dipanggil setiap ada perubahan state)
+    function render() {
+      // Filter 1: Berdasarkan Pencarian (Search)
+      let filteredData = products.filter(item => {
+        return item.name.toLowerCase().includes(state.search.toLowerCase());
+      });
+
+      // Filter 2: Berdasarkan Kategori
+      if (state.category !== "all") {
+        filteredData = filteredData.filter(item => item.category === state.category);
+      }
+
+      // Filter 3: Pengurutan (Sort)
+      if (state.sort === "asc") {
+        filteredData.sort((a, b) => a.price - b.price);
+      } else if (state.sort === "desc") {
+        filteredData.sort((a, b) => b.price - a.price);
+      }
+
+      // Cetak ke Layar
+      if (filteredData.length === 0) {
+        productList.innerHTML = "<p>Data tidak ditemukan.</p>";
+      } else {
+        productList.innerHTML = filteredData.map(item => `
+          <div class="product-card">
+            <h3>${item.name}</h3>
+            <p>Kategori: ${item.category}</p>
+            <p>Harga: Rp${item.price.toLocaleString("id-ID")}</p>
+          </div>
+        `).join("");
+      }
+    }
+
+    // 5. JAWABAN LATIHAN 19.1 (MENGHUBUNGKAN EVENT KE STATE & RENDER)
+
+    // Event 1: Search Input
+    searchInput.addEventListener("input", (e) => {
+      state.search = e.target.value;
+      render();
+    });
+
+    // Event 2: Category Dropdown
+    categorySelect.addEventListener("change", (e) => {
+      state.category = e.target.value;
+      render();
+    });
+
+    // Event 3: Sort Dropdown
+    sortSelect.addEventListener("change", (e) => {
+      state.sort = e.target.value;
+      render();
+    });
+
+    // Jalankan render awal saat halaman pertama dimuat
+    render();
+  </script>
+</body>
+</html>
